@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoTravel — Aventuras que cambian vidas | Agencia de viajes y turismo</title>
+<meta name="description" content="EcoTravel: agencia de viajes de aventura, naturaleza y turismo responsable. Descubre Cartagena, Tayrona, Eje Cafetero, Patagonia, Cancún, safaris y Alpes. Paquetes de demostración configurables.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231b4332'/%3E%3Cpath d='M8 44 L24 20 L32 32 L38 24 L56 44 Z' fill='%23ffffff'/%3E%3Cpath d='M8 44 L56 44 L52 52 L12 52 Z' fill='%23d8f3dc'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,600;9..144,1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido principal</a>
+
+<header class="navbar" id="navbar">
+  <div class="container nav-inner">
+    <a href="#inicio" class="brand" aria-label="EcoTravel inicio">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64" width="34" height="34"><rect width="64" height="64" rx="14" fill="#1b4332"/><path d="M8 44 L24 20 L32 32 L38 24 L56 44 Z" fill="#fff"/><path d="M8 44 L56 44 L52 52 L12 52 Z" fill="#d8f3dc"/></svg>
+      </span>
+      <span class="brand-text">Eco<strong>Travel</strong><small>aventura · naturaleza</small></span>
+    </a>
+    <nav class="nav-links" id="navLinks" aria-label="Navegación principal">
+      <a href="#inicio">Inicio</a>
+      <a href="#destinos">Destinos</a>
+      <a href="#experiencias">Experiencias</a>
+      <a href="#ofertas">Ofertas</a>
+      <a href="#nosotros">Nosotros</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="btn btn-primary" data-open-booking data-paquete="Asesoría general">Reserva ahora</button>
+      <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false" aria-controls="navLinks">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu" hidden>
+    <a href="#inicio">Inicio</a>
+    <a href="#destinos">Destinos</a>
+    <a href="#experiencias">Experiencias</a>
+    <a href="#ofertas">Ofertas</a>
+    <a href="#nosotros">Nosotros</a>
+    <a href="#contacto">Contacto</a>
+    <button class="btn btn-primary" data-open-booking data-paquete="Asesoría general">Reserva ahora</button>
+  </div>
+</header>
+
+<main id="contenido">
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-slides" aria-hidden="true">
+    <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1800&q=80')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1800&q=80')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1800&q=80')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1800&q=80')"></div>
+  </div>
+  <div class="hero-overlay" aria-hidden="true"></div>
+  <div class="container hero-content">
+    <p class="eyebrow">🌿 Turismo responsable · Colombia y el mundo</p>
+    <h1>Aventuras<br>que cambian vidas</h1>
+    <p class="hero-sub">Explora, conoce, vive. Descubre el mundo con nosotros: montañas, selvas, playas y culturas que te transforman.</p>
+    <div class="hero-buttons">
+      <a href="#destinos" class="btn btn-primary btn-lg">Explorar destinos</a>
+      <a href="#experiencias" class="btn btn-ghost btn-lg">Descubrir experiencias</a>
+    </div>
+    <div class="hero-dots" role="group" aria-label="Cambiar foto de portada">
+      <button class="dot active" data-hero="0" aria-label="Ver foto 1: montañas"></button>
+      <button class="dot" data-hero="1" aria-label="Ver foto 2: playa"></button>
+      <button class="dot" data-hero="2" aria-label="Ver foto 3: safari"></button>
+      <button class="dot" data-hero="3" aria-label="Ver foto 4: alpes"></button>
+    </div>
+    <form class="search-card" id="searchForm" novalidate aria-label="Buscador de viajes">
+      <div class="search-field">
+        <label for="fDestino">Destino</label>
+        <select id="fDestino" name="destino">
+          <option value="">¿A dónde quieres ir?</option>
+        </select>
+      </div>
+      <div class="search-field">
+        <label for="fSalida">Fecha de salida</label>
+        <input type="date" id="fSalida" name="salida">
+      </div>
+      <div class="search-field">
+        <label for="fRegreso">Fecha de regreso</label>
+        <input type="date" id="fRegreso" name="regreso">
+      </div>
+      <div class="search-field">
+        <label for="fViajeros">Viajeros</label>
+        <select id="fViajeros" name="viajeros">
+          <option value="1">1 viajero</option>
+          <option value="2" selected>2 viajeros</option>
+          <option value="3">3 viajeros</option>
+          <option value="4">4 viajeros</option>
+          <option value="5">5 viajeros</option>
+          <option value="6">6+ viajeros</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary btn-search">Buscar</button>
+      <p class="form-error" id="searchError" role="alert" hidden></p>
+    </form>
+    <p class="demo-note">Datos de demostración: los resultados filtran el catálogo local, sin disponibilidad real ni conexión con proveedores.</p>
+  </div>
+</section>
+
+<!-- RESULTADOS BÚSQUEDA -->
+<section class="section results-section" id="resultados" hidden>
+  <div class="container">
+    <h2 id="resultsTitle">Resultados de tu búsqueda</h2>
+    <p id="resultsMeta" class="muted"></p>
+    <div class="grid cards-3" id="resultsGrid"></div>
+    <button class="btn btn-ghost" id="clearSearch">Limpiar búsqueda</button>
+  </div>
+</section>
+
+<!-- CÓMO FUNCIONA -->
+<section class="steps" aria-label="Cómo funciona">
+  <div class="container steps-inner">
+    <div class="step"><span class="step-num" aria-hidden="true">1</span><div><strong>Explora</strong><small>Destinos, mapa y experiencias</small><a href="#destinos">Ver destinos →</a></div></div>
+    <div class="step"><span class="step-num" aria-hidden="true">2</span><div><strong>Cotiza</strong><small>Estimación al instante</small><a href="#cotizador">Ir al cotizador →</a></div></div>
+    <div class="step"><span class="step-num" aria-hidden="true">3</span><div><strong>Reserva</strong><small>Solicitud acompañada</small><a href="#contacto">Hablar con un asesor →</a></div></div>
+  </div>
+</section>
+
+<!-- DESTINOS -->
+<section class="section" id="destinos">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="kicker">Destinos destacados</p>
+        <h2>Descubre tu próximo destino</h2>
+        <p class="muted">Precios de referencia en pesos colombianos (COP) o dólares según se indica. Contenido de demostración, fácilmente editable en <code>app.js</code>.</p>
+      </div>
+      <div class="filter-row" role="group" aria-label="Filtrar destinos por categoría">
+        <button class="chip active" data-filter="todos">Todos</button>
+        <button class="chip" data-filter="playa">Playa</button>
+        <button class="chip" data-filter="aventura">Aventura</button>
+        <button class="chip" data-filter="cultura">Cultura</button>
+        <button class="chip" data-filter="naturaleza">Naturaleza</button>
+        <button class="chip" data-filter="favoritos" id="favChip">♥ Favoritos (0)</button>
+      </div>
+    </div>
+    <div class="grid cards-4" id="destinosGrid"></div>
+  </div>
+</section>
+
+<!-- MAPA: oculto por defecto; app.js lo muestra solo si hay ubicaciones verificadas -->
+<section class="section section-alt" id="mapa" hidden>
+  <div class="container">
+    <p class="kicker">Mapa interactivo</p>
+    <h2>¿Dónde te espera la aventura?</h2>
+    <p class="muted">Toca un marcador para ver el destino y sus detalles. Mapa © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>.</p>
+    <div id="map" role="application" aria-label="Mapa de destinos EcoTravel"></div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trustbar">
+  <div class="container trustbar-inner">
+    <div class="trust-item"><span class="trust-icon" aria-hidden="true">🌱</span><div><strong>Viajes sostenibles</strong><small>Con impacto positivo</small></div></div>
+    <div class="trust-item"><span class="trust-icon" aria-hidden="true">🧭</span><div><strong>Guías locales</strong><small>Expertos en cada destino</small></div></div>
+    <div class="trust-item"><span class="trust-icon" aria-hidden="true">👥</span><div><strong>Grupos reducidos</strong><small>Más conexión, menos masificación</small></div></div>
+  </div>
+</div>
+
+<!-- EXPERIENCIAS -->
+<section class="section section-alt" id="experiencias">
+  <div class="container">
+    <p class="kicker">Experiencias imperdibles</p>
+    <h2>Viaja a tu manera</h2>
+    <p class="muted">Ocho formas de vivir el mundo. Pulsa una categoría para filtrar destinos y paquetes relacionados.</p>
+    <div class="grid cards-4" id="experienciasGrid"></div>
+  </div>
+</section>
+
+<!-- OFERTAS -->
+<section class="section" id="ofertas">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="kicker">Ofertas y paquetes</p>
+        <h2>Paquetes destacados</h2>
+        <p class="muted">Paquetes de demostración coherentes. Los descuentos mostrados son ejemplos ilustrativos, no promociones verificadas. Marca hasta 3 con <strong>＋ Comparar</strong> para verlos lado a lado.</p>
+      </div>
+    </div>
+    <div class="grid cards-3" id="paquetesGrid"></div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="section" id="quiz">
+  <div class="container narrow">
+    <p class="kicker">¿No te decides?</p>
+    <h2>Encuentra tu viaje ideal</h2>
+    <p class="muted">Responde 3 preguntas y te recomendamos un destino de nuestro catálogo de demostración.</p>
+    <div class="card quiz-card">
+      <div class="quiz-progress" aria-hidden="true"><span id="quizBar"></span></div>
+      <p class="muted" id="quizStep" role="status"></p>
+      <div id="quizBox"></div>
+    </div>
+  </div>
+</section>
+
+<!-- COTIZADOR -->
+<section class="section section-alt" id="cotizador">
+  <div class="container">
+    <p class="kicker">Cotizador estimado</p>
+    <h2>Calcula tu viaje en segundos</h2>
+    <p class="muted">Estimación automática <strong>de demostración</strong> con fines orientativos. No es una cotización real ni reserva ningún servicio.</p>
+    <div class="quote-grid">
+      <form class="card form" id="quoteForm" novalidate aria-label="Cotizador de viaje">
+        <div class="form-group"><label for="qPaquete">Paquete</label><select id="qPaquete"></select></div>
+        <div class="form-row">
+          <div class="form-group"><label for="qViajeros">Viajeros</label>
+            <select id="qViajeros"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select>
+          </div>
+          <div class="form-group"><label for="qNivel">Nivel de viaje</label>
+            <select id="qNivel"><option value="esencial">Esencial ×1.0</option><option value="confort" selected>Confort ×1.3</option><option value="premium">Premium ×1.65</option></select>
+          </div>
+        </div>
+        <div class="form-group"><label for="qTemporada">Temporada</label>
+          <select id="qTemporada"><option value="baja">Baja (sin recargo)</option><option value="media" selected>Media (+10%)</option><option value="alta">Alta (+20%)</option></select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg">Calcular estimación</button>
+      </form>
+      <div class="card quote-result" aria-live="polite">
+        <div id="quoteOutput"><p class="muted">Elige tus opciones y pulsa <strong>Calcular estimación</strong> para ver el desglose.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POR QUÉ NOSOTROS -->
+<section class="section section-alt" id="nosotros">
+  <div class="container">
+    <p class="kicker">Por qué viajar con nosotros</p>
+    <h2>Una agencia que viaja contigo</h2>
+    <div class="grid cards-3 features">
+      <div class="feature"><span aria-hidden="true">💬</span><h3>Atención personalizada</h3><p>Escuchamos tu idea de viaje y la convertimos en un itinerario a tu medida.</p></div>
+      <div class="feature"><span aria-hidden="true">🗺️</span><h3>Asesoría para planificar</h3><p>Te acompañamos en cada decisión: fechas, rutas, presupuesto y temporada ideal.</p></div>
+      <div class="feature"><span aria-hidden="true">✨</span><h3>Experiencias seleccionadas</h3><p>Curaduría de actividades auténticas con operadores locales responsables.</p></div>
+      <div class="feature"><span aria-hidden="true">🤝</span><h3>Acompañamiento en tu reserva</h3><p>Seguimiento claro durante todo el proceso de solicitud de reserva.</p></div>
+      <div class="feature"><span aria-hidden="true">💰</span><h3>Para cada presupuesto</h3><p>Opciones esenciales, confort y premium sin sorpresas en los costos.</p></div>
+      <div class="feature"><span aria-hidden="true">🌎</span><h3>Turismo responsable</h3><p>Promovemos prácticas que cuidan la naturaleza y benefician a las comunidades.</p></div>
+    </div>
+    <div class="stats" aria-label="Indicadores descriptivos">
+      <div class="stat"><strong>8</strong><span>destinos en catálogo demo</span></div>
+      <div class="stat"><strong>8</strong><span>tipos de experiencia</span></div>
+      <div class="stat"><strong>6</strong><span>paquetes configurables</span></div>
+      <div class="stat"><strong>100%</strong><span>contenido editable en un archivo</span></div>
+    </div>
+    <p class="demo-note">ℹ️ Cifras descriptivas del contenido de demostración incluido en esta página, no métricas empresariales reales.</p>
+  </div>
+</section>
+
+<!-- SOSTENIBLE -->
+<section class="sustainable">
+  <div class="sustainable-bg" aria-hidden="true"></div>
+  <div class="sustainable-overlay" aria-hidden="true"></div>
+  <div class="container sustainable-content">
+    <h2>La naturaleza también<br>es un destino</h2>
+    <p>Haz parte de un turismo responsable y vive experiencias inolvidables: senderos sin huella, avistamiento respetuoso, apoyo a economías locales y alojamientos conscientes.</p>
+    <div class="hero-buttons">
+      <button class="btn btn-light" data-filter-link="naturaleza">Descubrir experiencias sostenibles</button>
+      <a href="#contacto" class="btn btn-outline-light">Hablar con un asesor</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section class="section" id="testimonios">
+  <div class="container">
+    <p class="kicker">Testimonios</p>
+    <h2>Lo que dicen nuestros viajeros</h2>
+    <p class="demo-note">Contenido de demostración con nombres de ejemplo. No son reseñas verificadas.</p>
+    <div class="carousel" id="testiCarousel">
+      <div class="carousel-track" id="testimoniosGrid"></div>
+    </div>
+    <div class="carousel-nav">
+      <button class="btn btn-ghost" id="testiPrev" aria-label="Testimonio anterior">← Anterior</button>
+      <div class="dots" id="testiDots" role="group" aria-label="Elegir testimonio"></div>
+      <button class="btn btn-ghost" id="testiNext" aria-label="Testimonio siguiente">Siguiente →</button>
+    </div>
+    <div class="card form opinion">
+      <h3>¿Viajaste con nosotros? Cuéntanos (demo)</h3>
+      <p class="muted">Formulario de demostración: tu opinión se guarda solo en tu navegador y se marca como no verificada.</p>
+      <form id="opinionForm" novalidate>
+        <div class="form-row">
+          <div class="form-group"><label for="oNombre">Tu nombre *</label><input id="oNombre" type="text" autocomplete="name" placeholder="Ej. Camila R."><small class="err" data-err="onombre"></small></div>
+          <div class="form-group"><label for="oDestino">Destino visitado</label><select id="oDestino"></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label for="oStars">Calificación</label>
+            <select id="oStars"><option value="5">★★★★★ (5)</option><option value="4">★★★★ (4)</option><option value="3">★★★ (3)</option><option value="2">★★ (2)</option><option value="1">★ (1)</option></select>
+          </div>
+          <div class="form-group"><label for="oMsg">Tu experiencia *</label><textarea id="oMsg" rows="2" placeholder="¿Qué fue lo mejor de tu viaje?"></textarea><small class="err" data-err="omensaje"></small></div>
+        </div>
+        <button type="submit" class="btn btn-primary">Publicar opinión (demo)</button>
+        <p class="form-status" id="opinionStatus" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section section-alt" id="faq">
+  <div class="container narrow">
+    <p class="kicker">Preguntas frecuentes</p>
+    <h2>¿Tienes dudas? Te ayudamos</h2>
+    <div class="faq" id="faqList"></div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section class="section" id="contacto">
+  <div class="container contact-grid">
+    <div>
+      <p class="kicker">Contacto</p>
+      <h2>Hablemos de tu próximo viaje</h2>
+      <p class="muted">Completa el formulario y un asesor te contactará. <strong>Modo demostración:</strong> el mensaje se guarda localmente en tu navegador; para producción conecta un servicio real (ver <code>README.md</code>).</p>
+      <ul class="contact-info">
+        <li><strong>✉️ Correo:</strong> <a href="mailto:hola@ecotravel.demo">hola@ecotravel.demo</a> <em>(marcador configurable)</em></li>
+        <li><strong>📞 Teléfono:</strong> +57 (000) 000 0000 <em>(marcador, no real)</em></li>
+        <li><strong>📍 Ubicación:</strong> Colombia · atención virtual <em>(sin sede física declarada)</em></li>
+        <li><strong>🕘 Horario:</strong> Lun–Vie 8:00–18:00 · Sáb 9:00–13:00 <em>(ejemplo)</em></li>
+      </ul>
+      <div class="social">
+        <a href="#" aria-label="Instagram (configurable)" data-social>Instagram</a>
+        <a href="#" aria-label="Facebook (configurable)" data-social>Facebook</a>
+        <a href="#" aria-label="TikTok (configurable)" data-social>TikTok</a>
+        <a href="#" aria-label="YouTube (configurable)" data-social>YouTube</a>
+      </div>
+    </div>
+    <form class="card form" id="contactForm" novalidate>
+      <div class="form-row">
+        <div class="form-group"><label for="cNombre">Nombre completo *</label><input id="cNombre" name="nombre" type="text" autocomplete="name" placeholder="Ej. María Fernanda Ríos"><small class="err" data-err="nombre"></small></div>
+        <div class="form-group"><label for="cEmail">Correo electrónico *</label><input id="cEmail" name="email" type="email" autocomplete="email" placeholder="tucorreo@ejemplo.com"><small class="err" data-err="email"></small></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label for="cTel">Número de contacto *</label><input id="cTel" name="telefono" type="tel" autocomplete="tel" placeholder="+57 300 000 0000"><small class="err" data-err="telefono"></small></div>
+        <div class="form-group"><label for="cViajeros">Número de viajeros</label><select id="cViajeros" name="viajeros"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5+</option></select></div>
+      </div>
+      <div class="form-group"><label for="cDestino">Destino de interés</label><select id="cDestino" name="destino"><option value="">Todos / aún no lo decido</option></select></div>
+      <div class="form-group"><label for="cMsg">Mensaje *</label><textarea id="cMsg" name="mensaje" rows="4" placeholder="Cuéntanos fechas tentativas, presupuesto y lo que sueñas vivir…"></textarea><small class="err" data-err="mensaje"></small></div>
+      <button type="submit" class="btn btn-primary btn-lg" id="contactSubmit">Enviar mensaje</button>
+      <p class="form-status" id="contactStatus" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <p class="brand-text light">Eco<strong>Travel</strong></p>
+      <p class="muted-light">Agencia de aventura, naturaleza y turismo responsable. Contenido de demostración listo para personalizar.</p>
+    </div>
+    <nav aria-label="Enlaces rápidos"><h3>Enlaces rápidos</h3><a href="#inicio">Inicio</a><a href="#destinos">Destinos</a><a href="#experiencias">Experiencias</a><a href="#ofertas">Ofertas</a><a href="#faq">Preguntas frecuentes</a></nav>
+    <nav aria-label="Categorías"><h3>Destinos</h3><a href="#destinos">Caribe colombiano</a><a href="#destinos">Patagonia</a><a href="#destinos">Cancún</a><a href="#destinos">Safari en África</a><a href="#destinos">Alpes europeos</a></nav>
+    <div><h3>Contacto</h3><p class="muted-light">hola@ecotravel.demo<br>+57 (000) 000 0000<br>Colombia · atención virtual</p><p class="muted-light"><a href="#" data-social>Privacidad</a> · <a href="#" data-social>Tratamiento de datos</a></p></div>
+  </div>
+  <div class="container footer-bottom"><p>© 2026 EcoTravel (marca provisional de demostración). Todos los derechos reservados. Precios, testimonios y disponibilidad son ejemplos ilustrativos.</p></div>
+</footer>
+
+<!-- MODAL DETALLE -->
+<div class="modal-backdrop" id="detailModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+    <button class="modal-close" data-close aria-label="Cerrar detalle">✕</button>
+    <img id="detailImg" src="" alt="">
+    <div class="modal-body">
+      <p class="kicker" id="detailKicker"></p>
+      <h2 id="detailTitle"></h2>
+      <p class="muted" id="detailMeta"></p>
+      <p id="detailDesc"></p>
+      <ul class="includes" id="detailIncludes"></ul>
+      <div id="detailItin"></div>
+      <p class="price" id="detailPrice"></p>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="detailBook">Solicitar reserva</button>
+        <button class="btn btn-ghost" data-close>Seguir explorando</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RESERVA -->
+<div class="modal-backdrop" id="bookingModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="bookingTitle">
+    <button class="modal-close" data-close aria-label="Cerrar reserva">✕</button>
+    <div class="modal-body">
+      <p class="kicker">Solicitud de reserva · demostración</p>
+      <h2 id="bookingTitle">Reservar viaje</h2>
+      <p class="muted">Sin pagos ni confirmaciones reales. Al enviar, guardamos tu solicitud localmente y te mostramos el resumen.</p>
+      <form id="bookingForm" novalidate>
+        <div class="form-group"><label for="bPaquete">Paquete / destino</label><input id="bPaquete" name="paquete" type="text" readonly></div>
+        <div class="form-row">
+          <div class="form-group"><label for="bNombre">Nombre completo *</label><input id="bNombre" name="nombre" type="text" autocomplete="name"><small class="err" data-err="bnombre"></small></div>
+          <div class="form-group"><label for="bEmail">Correo *</label><input id="bEmail" name="email" type="email" autocomplete="email"><small class="err" data-err="bemail"></small></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label for="bFecha">Fecha tentativa *</label><input id="bFecha" name="fecha" type="date"><small class="err" data-err="bfecha"></small></div>
+          <div class="form-group"><label for="bViajeros">Viajeros</label><select id="bViajeros" name="viajeros"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5+</option></select></div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg">Enviar solicitud</button>
+        <p class="form-status" id="bookingStatus" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL COMPARADOR -->
+<div class="modal-backdrop" id="compareModal" hidden>
+  <div class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="compareTitle">
+    <button class="modal-close" data-close aria-label="Cerrar comparador">✕</button>
+    <div class="modal-body">
+      <p class="kicker">Comparador · demostración</p>
+      <h2 id="compareTitle">Compara paquetes lado a lado</h2>
+      <div class="table-wrap"><table id="compareTable"></table></div>
+      <p class="demo-note">Precios de referencia de demostración. Solicita una cotización real con un asesor.</p>
+    </div>
+  </div>
+</div>
+
+<div id="compareBar" hidden>
+  <span id="compareCount" role="status"></span>
+  <button class="btn btn-light" id="openCompare">Comparar</button>
+  <button class="btn btn-outline-light" id="clearCompare">Limpiar</button>
+</div>
+
+<a id="waFloat" href="https://wa.me/" target="_blank" rel="noopener" aria-label="Chatea con nosotros por WhatsApp" title="¿Dudas? Escríbenos por WhatsApp">
+  <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path fill="#fff" d="M16 3C9.4 3 4 8.4 4 15c0 2.4.7 4.6 2 6.5L4 29l7.7-2c1.8 1 3.9 1.5 4.3 1.5 6.6 0 12-5.4 12-12S22.6 3 16 3zm0 22c-1.4 0-2.8-.4-4-1.1l-.3-.2-4.6 1.2 1.2-4.5-.2-.3c-.8-1.3-1.2-2.7-1.2-4.2 0-5 4-9 9-9s9 4 9 9-4 9.1-8.9 9.1zm5-6.7c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.3-.6.9-.8 1-.1.2-.3.2-.5.1-.3-.1-1.1-.4-2-1.3-.7-.7-1.2-1.5-1.4-1.7-.1-.3 0-.4.1-.5l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5L14.2 10c-.2-.5-.5-.4-.6-.4h-.5c-.2 0-.5.2-.7.7-.2.5-.9 2.1-.9 4.3 0 1.4.7 2.9 1.2 3.7.1.2 2.2 3.7 5.7 4.9 1.1.4 1.8.5 2.4.5.5 0 1.6-.7 1.8-1.3.2-.6.2-1.2.2-1.3-.1-.2-.3-.2-.6-.4z"/></svg>
+</a>
+
+<button id="toTop" aria-label="Volver al inicio" hidden>↑</button>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
