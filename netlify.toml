@@ -1,0 +1,10 @@
+# Configuracion de despliegue continuo en Netlify (sitio estático).
+# Publica la raíz del repositorio; no hay comando de build.
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
