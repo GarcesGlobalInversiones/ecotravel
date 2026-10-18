@@ -34,14 +34,23 @@ Sitio estático listo para presentar. Solo abre `index.html` en el navegador. No
 - **Itinerarios día a día:** timeline en el modal de detalle (`ITINERARIOS` en `app.js`, contenido demo orientativo).
 - **Hero con carrusel:** 4 fotos con fundido cada 6s, dots manuales, pausa al ocultar la pestaña y sin autoplay con movimiento reducido.
 - **Testimonios en carrusel:** avance automático cada 7s (pausa al pasar el cursor), flechas y dots; **formulario de opinión demo** (nombre, destino, estrellas, mensaje) que publica la tarjeta al inicio y la guarda en `localStorage` (`ecotravel_opiniones_demo`), marcada como no verificada.
-- Reserva y contacto: validación (nombre, email regex, teléfono ≥7 dígitos, mensaje ≥10), estado de carga, confirmación honesta de **demostración local** (guarda en `localStorage`: `ecotravel_reservas_demo`, `ecotravel_contacto_demo`). Sin backend real.
+- Reserva, contacto y opiniones: validación (nombre, email regex, teléfono ≥7 dígitos, mensaje ≥10), estado de carga y **envío real vía Netlify Forms** (`netlifySubmit()` en `app.js`, POST a `/`). Si el sitio no está publicado en Netlify o no hay conexión, se guarda en `localStorage` como respaldo y se avisa al usuario. Honeypot `bot-field` anti-spam.
 - Imágenes: Unsplash estables + `loading="lazy"` + `onerror` con placeholder SVG (no hay imágenes rotas).
 
+## Formularios (Netlify Forms)
+Los 3 formularios del `index.html` llevan `data-netlify="true"` y su `form-name`:
+- `contacto` — formulario de contacto
+- `reserva` — solicitud de reserva
+- `opinion` — opiniones de viajeros
+
+Para recibir los mensajes por correo (una vez, en Netlify): sitio → **Forms** → **Settings → Form notifications → Add notification → Email notification** → elige formulario (o "All forms") y tu correo. Los envíos también quedan en la pestaña **Forms**. Si cambias el `name` de un formulario, actualiza su `form-name` oculto.
+
 ## Conectar servicios reales (pendiente, identificado)
-1. **Contacto/reservas:** reemplaza el `setTimeout` en `app.js` por `fetch("https://tu-api/reservas", {method:"POST", ...})` o un servicio como Formspree/Brevo. Hoy NO se envía nada a la agencia (se indica en la UI).
+1. **Notificaciones:** los formularios ya envían a Netlify; falta configurar el correo de aviso (ver arriba).
 2. **Redes/contacto:** reemplaza `hola@ecotravel.demo`, `+57 (000) 000 0000` y los `href="#"` sociales por datos reales.
-3. **Precios:** todo lo mostrado lleva etiqueta “demo/referencia”. Actualiza `DESTINOS`/`PAQUETES` con cotizaciones reales antes de publicar.
-4. **Testimonios/stats:** marcados como demostración/descriptivos; sustitúyelos por reseñas y métricas verificadas.
+3. **Precios:** actualiza `DESTINOS`/`PAQUETES` con cotizaciones reales (hoy llevan etiqueta demo/referencia).
+4. **Testimonios/stats:** marcados como ejemplo/descriptivos; sustitúyelos por reseñas y métricas verificadas.
+5. **WhatsApp:** cambia `WHATSAPP_NUMBER` (hoy `573000000000`) por el número real sin "+".
 
 ## Personalizar
 Edita solo `app.js` (datos) y `styles.css` (`:root` para colores). Contenido en español, precios COP/USD configurables.

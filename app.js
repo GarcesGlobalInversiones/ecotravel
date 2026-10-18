@@ -118,6 +118,24 @@ const fmt = (p) => p.moneda === "COP"
 const toast = (msg) => { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2600); };
 const esc = (s) => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
+/* Envío real de formularios con Netlify Forms.
+   Netlify detecta los formularios al publicar el sitio (index.html contiene los 3).
+   Si el sitio no está en Netlify (o no hay conexión), la promesa falla y usamos respaldo local. */
+async function netlifySubmit(form) {
+  const body = new URLSearchParams();
+  new FormData(form).forEach((v, k) => body.append(k, v));
+  const res = await fetch("/", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: body.toString(),
+  });
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  return res;
+}
+function saveLocal(key, item) {
+  try { const a = JSON.parse(localStorage.getItem(key) || "[]"); a.push(item); localStorage.setItem(key, JSON.stringify(a)); } catch { /* almacenamiento no disponible */ }
+}
+
 /* Imágenes con respaldo: si una URL falla, usa un degradado SVG */
 function guardImg(img, label) {
   img.alt = label;
@@ -291,7 +309,7 @@ function renderTestimonios() {
     const stars = "★".repeat(t.estrellas || 5) + "☆".repeat(5 - (t.estrellas || 5));
     const el = document.createElement("article");
     el.className = "card testi";
-    el.innerHTML = `<div class="card-body"><div class="stars" aria-label="${t.estrellas || 5} de 5 estrellas">${stars}</div><blockquote>“${esc(t.texto)}”</blockquote><div class="who"><span class="avatar" aria-hidden="true">${esc(t.inicial)}</span><div><strong>${esc(t.nombre)}</strong><br><small class="muted">Viajó a ${esc(t.viaje)}${t.demo ? " · opinión de demostración" : " · demo"}</small></div></div></div>`;
+    el.innerHTML = `<div class="card-body"><div class="stars" aria-label="${t.estrellas || 5} de 5 estrellas">${stars}</div><blockquote>“${esc(t.texto)}”</blockquote><div class="who"><span class="avatar" aria-hidden="true">${esc(t.inicial)}</span><div><strong>${esc(t.nombre)}</strong><br><small class="muted">Viajó a ${esc(t.viaje)}${t.demo ? " · opinión de visitante (sin verificar)" : " · ejemplo ilustrativo"}</small></div></div></div>`;
     grid.appendChild(el);
   });
   testiIndex = 0;
@@ -338,9 +356,14 @@ function setupOpinion() {
     localStorage.setItem("ecotravel_opiniones_demo", JSON.stringify(OPINIONES));
     renderTestimonios();
     st.style.color = "var(--forest)";
-    st.textContent = "✅ Opinión publicada en modo demostración (visible solo en tu navegador).";
-    toast("Opinión demo publicada");
-    e.target.reset();
+    st.textContent = "⏳ Enviando tu opinión…";
+    netlifySubmit(e.target).then(() => {
+      st.textContent = "✅ ¡Gracias por tu opinión! Quedó registrada en tu navegador y enviada a la agencia (se mostrará como no verificada).";
+      toast("Opinión enviada");
+    }).catch(() => {
+      st.style.color = "#b45309";
+      st.textContent = "📴 No se pudo enviar (sitio sin publicar o sin conexión). Quedó guardada localmente como demostración.";
+    }).finally(() => { e.target.reset(); });
   });
 }
 
@@ -572,15 +595,17 @@ $("#bookingForm").addEventListener("submit", (e) => {
   const st = $("#bookingStatus");
   if (!ok) { st.textContent = "Revisa los campos marcados."; st.style.color = "#b91c1c"; return; }
   st.style.color = "var(--forest)";
-  st.textContent = "⏳ Guardando tu solicitud (demo)…";
-  setTimeout(() => {
-    const reservas = JSON.parse(localStorage.getItem("ecotravel_reservas_demo") || "[]");
-    reservas.push({ paquete: $("#bPaquete").value, nombre, email, fecha, viajeros: $("#bViajeros").value, cuando: new Date().toISOString() });
-    localStorage.setItem("ecotravel_reservas_demo", JSON.stringify(reservas));
-    st.textContent = `✅ ¡Gracias, ${nombre.split(" ")[0]}! Registramos tu interés en «${$("#bPaquete").value}» para el ${fecha} (demostración local, sin reserva real). Te contactaríamos a ${email}.`;
-    toast("Solicitud demo guardada localmente");
+  st.textContent = "⏳ Enviando tu solicitud…";
+  netlifySubmit(e.target).then(() => {
+    st.textContent = `✅ ¡Gracias, ${nombre.split(" ")[0]}! Recibimos tu solicitud para «${$("#bPaquete").value}» (${fecha}). Te contactaríamos a ${email}.`;
+    toast("Solicitud enviada a la agencia");
+  }).catch(() => {
+    saveLocal("ecotravel_reservas_demo", { paquete: $("#bPaquete").value, nombre, email, fecha, viajeros: $("#bViajeros").value, cuando: new Date().toISOString() });
+    st.style.color = "#b45309";
+    st.textContent = "📴 No se pudo enviar ahora (sitio sin publicar o sin conexión). Guardamos tu solicitud localmente como respaldo; inténtalo de nuevo más tarde.";
+  }).finally(() => {
     e.target.querySelector("button[type=submit]").disabled = false;
-  }, 700);
+  });
 });
 
 /* ============ CONTACTO ============ */
@@ -601,17 +626,20 @@ $("#contactForm").addEventListener("submit", (e) => {
   const st = $("#contactStatus");
   if (!ok) { st.textContent = "⚠️ Revisa los campos marcados en rojo."; st.style.color = "#b91c1c"; return; }
   const btn = $("#contactSubmit"); btn.disabled = true; btn.textContent = "Enviando…";
-  /* DEMO honesta: sin backend. Para producción, reemplaza este bloque por fetch() a tu API/Formspree/Brevo (ver README). */
-  setTimeout(() => {
-    const msgs = JSON.parse(localStorage.getItem("ecotravel_contacto_demo") || "[]");
-    msgs.push({ ...v, destino: $("#cDestino").value, viajeros: $("#cViajeros").value, cuando: new Date().toISOString() });
-    localStorage.setItem("ecotravel_contacto_demo", JSON.stringify(msgs));
+  st.style.color = "var(--forest)";
+  st.textContent = "⏳ Enviando tu mensaje…";
+  netlifySubmit(e.target).then(() => {
     st.style.color = "var(--forest)";
-    st.textContent = "✅ Mensaje registrado en modo demostración (guardado local, no enviado a la agencia). Para producción conecta un servicio real según el README.";
-    toast("Mensaje demo guardado");
-    btn.disabled = false; btn.textContent = "Enviar mensaje";
+    st.textContent = "✅ ¡Mensaje enviado! Un asesor te contactará pronto. Gracias por escribirnos.";
+    toast("Mensaje enviado a la agencia");
     e.target.reset();
-  }, 800);
+  }).catch(() => {
+    saveLocal("ecotravel_contacto_demo", { ...v, destino: $("#cDestino").value, viajeros: $("#cViajeros").value, cuando: new Date().toISOString() });
+    st.style.color = "#b45309";
+    st.textContent = "📴 No se pudo enviar (sitio sin publicar o sin conexión). Guardamos tu mensaje localmente como respaldo.";
+  }).finally(() => {
+    btn.disabled = false; btn.textContent = "Enviar mensaje";
+  });
 });
 
 /* Enlaces sociales configurables: evita navegación rota */

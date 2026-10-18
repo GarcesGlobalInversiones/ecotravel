@@ -285,20 +285,22 @@
       <button class="btn btn-ghost" id="testiNext" aria-label="Testimonio siguiente">Siguiente →</button>
     </div>
     <div class="card form opinion">
-      <h3>¿Viajaste con nosotros? Cuéntanos (demo)</h3>
-      <p class="muted">Formulario de demostración: tu opinión se guarda solo en tu navegador y se marca como no verificada.</p>
-      <form id="opinionForm" novalidate>
+      <h3>¿Viajaste con nosotros? Cuéntanos</h3>
+      <p class="muted">Tu opinión llega a la agencia y aparece marcada como <em>no verificada</em> hasta que la revisemos.</p>
+      <form id="opinionForm" name="opinion" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+        <input type="hidden" name="form-name" value="opinion">
+        <p hidden><label>No completar este campo: <input name="bot-field"></label></p>
         <div class="form-row">
-          <div class="form-group"><label for="oNombre">Tu nombre *</label><input id="oNombre" type="text" autocomplete="name" placeholder="Ej. Camila R."><small class="err" data-err="onombre"></small></div>
-          <div class="form-group"><label for="oDestino">Destino visitado</label><select id="oDestino"></select></div>
+          <div class="form-group"><label for="oNombre">Tu nombre *</label><input id="oNombre" name="nombre" type="text" autocomplete="name" placeholder="Ej. Camila R."><small class="err" data-err="onombre"></small></div>
+          <div class="form-group"><label for="oDestino">Destino visitado</label><select id="oDestino" name="destino"></select></div>
         </div>
         <div class="form-row">
           <div class="form-group"><label for="oStars">Calificación</label>
-            <select id="oStars"><option value="5">★★★★★ (5)</option><option value="4">★★★★ (4)</option><option value="3">★★★ (3)</option><option value="2">★★ (2)</option><option value="1">★ (1)</option></select>
+            <select id="oStars" name="estrellas"><option value="5">★★★★★ (5)</option><option value="4">★★★★ (4)</option><option value="3">★★★ (3)</option><option value="2">★★ (2)</option><option value="1">★ (1)</option></select>
           </div>
-          <div class="form-group"><label for="oMsg">Tu experiencia *</label><textarea id="oMsg" rows="2" placeholder="¿Qué fue lo mejor de tu viaje?"></textarea><small class="err" data-err="omensaje"></small></div>
+          <div class="form-group"><label for="oMsg">Tu experiencia *</label><textarea id="oMsg" name="mensaje" rows="2" placeholder="¿Qué fue lo mejor de tu viaje?"></textarea><small class="err" data-err="omensaje"></small></div>
         </div>
-        <button type="submit" class="btn btn-primary">Publicar opinión (demo)</button>
+        <button type="submit" class="btn btn-primary">Enviar opinión</button>
         <p class="form-status" id="opinionStatus" role="status" aria-live="polite"></p>
       </form>
     </div>
@@ -320,7 +322,7 @@
     <div>
       <p class="kicker">Contacto</p>
       <h2>Hablemos de tu próximo viaje</h2>
-      <p class="muted">Completa el formulario y un asesor te contactará. <strong>Modo demostración:</strong> el mensaje se guarda localmente en tu navegador; para producción conecta un servicio real (ver <code>README.md</code>).</p>
+      <p class="muted">Completa el formulario y un asesor te contactará. Tu mensaje se envía a la agencia; si el sitio aún no está publicado en Netlify, se guarda localmente como respaldo.</p>
       <ul class="contact-info">
         <li><strong>✉️ Correo:</strong> <a href="mailto:hola@ecotravel.demo">hola@ecotravel.demo</a> <em>(marcador configurable)</em></li>
         <li><strong>📞 Teléfono:</strong> +57 (000) 000 0000 <em>(marcador, no real)</em></li>
@@ -334,7 +336,9 @@
         <a href="#" aria-label="YouTube (configurable)" data-social>YouTube</a>
       </div>
     </div>
-    <form class="card form" id="contactForm" novalidate>
+    <form class="card form" id="contactForm" name="contacto" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+      <input type="hidden" name="form-name" value="contacto">
+      <p hidden><label>No completar este campo: <input name="bot-field"></label></p>
       <div class="form-row">
         <div class="form-group"><label for="cNombre">Nombre completo *</label><input id="cNombre" name="nombre" type="text" autocomplete="name" placeholder="Ej. María Fernanda Ríos"><small class="err" data-err="nombre"></small></div>
         <div class="form-group"><label for="cEmail">Correo electrónico *</label><input id="cEmail" name="email" type="email" autocomplete="email" placeholder="tucorreo@ejemplo.com"><small class="err" data-err="email"></small></div>
@@ -393,8 +397,10 @@
     <div class="modal-body">
       <p class="kicker">Solicitud de reserva · demostración</p>
       <h2 id="bookingTitle">Reservar viaje</h2>
-      <p class="muted">Sin pagos ni confirmaciones reales. Al enviar, guardamos tu solicitud localmente y te mostramos el resumen.</p>
-      <form id="bookingForm" novalidate>
+      <p class="muted">Sin pagos en línea. Al enviar, tu solicitud llega a la agencia (o se guarda localmente si el sitio no está publicado).</p>
+      <form id="bookingForm" name="reserva" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+        <input type="hidden" name="form-name" value="reserva">
+        <p hidden><label>No completar este campo: <input name="bot-field"></label></p>
         <div class="form-group"><label for="bPaquete">Paquete / destino</label><input id="bPaquete" name="paquete" type="text" readonly></div>
         <div class="form-row">
           <div class="form-group"><label for="bNombre">Nombre completo *</label><input id="bNombre" name="nombre" type="text" autocomplete="name"><small class="err" data-err="bnombre"></small></div>
