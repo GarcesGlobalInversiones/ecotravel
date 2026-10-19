@@ -240,17 +240,35 @@ $$("[data-filter-link]").forEach(b => b.addEventListener("click", () => {
 function renderExperiencias() {
   const grid = $("#experienciasGrid");
   EXPERIENCIAS.forEach(e => {
+    const rel = DESTINOS.filter(d => d.categoria.includes(e.filtro));
     const el = document.createElement("article");
-    el.className = "card";
-    el.innerHTML = `<img src="${e.img}" alt="${e.titulo}"><div class="card-body"><h3>${e.titulo}</h3><p class="desc">${e.desc}</p><div class="card-actions"><button class="btn btn-ghost" data-exp="${e.filtro}">Explorar</button></div></div>`;
+    el.className = "card exp-card";
+    el.innerHTML = `
+      <img src="${e.img}" alt="${e.titulo}">
+      <div class="card-body">
+        <h3>${e.titulo}</h3>
+        <p class="desc">${e.desc}</p>
+        <div class="card-actions"><button class="btn btn-primary" data-exp="${e.filtro}">Explorar destinos</button></div>
+      </div>
+      <div class="exp-panel">
+        <p class="exp-panel-title">Destinos de ${e.titulo.toLowerCase()}</p>
+        <ul class="exp-list">
+          ${rel.length ? rel.map(d => `<li><button type="button" class="exp-item" data-detail="${d.id}"><span>${d.nombre}</span><small>${d.pais}</small></button></li>`).join("") : `<li class="exp-empty">Pronto más destinos en esta categoría.</li>`}
+        </ul>
+        <button type="button" class="exp-more" data-exp="${e.filtro}">Ver todos y filtrar →</button>
+      </div>`;
     guardImg(el.querySelector("img"), e.titulo);
-    el.querySelector("[data-exp]").addEventListener("click", (ev) => {
-      $$("[data-filter]").forEach(c => c.classList.toggle("active", c.dataset.filter === ev.target.dataset.exp));
-      renderDestinos(ev.target.dataset.exp);
-      renderPaquetes(ev.target.dataset.exp);
+    $$("[data-exp]", el).forEach(btn => btn.addEventListener("click", () => {
+      $$("[data-filter]").forEach(c => c.classList.toggle("active", c.dataset.filter === e.filtro));
+      renderDestinos(e.filtro);
+      renderPaquetes(e.filtro);
       toast(`Filtrado por: ${e.titulo}`);
       document.querySelector("#destinos").scrollIntoView({ behavior: "smooth" });
-    });
+    }));
+    el.addEventListener("mouseenter", () => el.classList.add("open"));
+    el.addEventListener("mouseleave", () => el.classList.remove("open"));
+    el.addEventListener("focusin", () => el.classList.add("open"));
+    el.addEventListener("focusout", () => el.classList.remove("open"));
     grid.appendChild(el);
   });
 }

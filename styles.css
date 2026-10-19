@@ -331,3 +331,24 @@ code{background:#eef3ee;padding:1px 6px;border-radius:6px}
   .page-head .container{flex-direction:column;gap:8px;padding-top:10px;padding-bottom:10px}
   .mini-nav a{margin:0 8px}
 }
+
+/* EXPERIENCIAS: efecto "hundir" + panel de destinos de la categoría */
+.exp-card{position:relative}
+.exp-card:hover,.exp-card:focus-within,.exp-card.open{transform:translateY(3px) scale(.985);box-shadow:inset 0 2px 7px rgba(27,67,50,.20),0 6px 16px rgba(27,67,50,.12)}
+.exp-panel{position:absolute;inset:0;background:linear-gradient(160deg,rgba(27,67,50,.97),rgba(27,67,50,.9));color:#fff;padding:16px;display:flex;flex-direction:column;gap:10px;opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .2s ease,transform .2s ease}
+.exp-card:hover .exp-panel,.exp-card:focus-within .exp-panel,.exp-card.open .exp-panel{opacity:1;transform:translateY(0);pointer-events:auto}
+.exp-panel-title{margin:0;font-size:.9rem;font-weight:700;color:#d8f3dc}
+.exp-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;overflow:auto}
+.exp-item{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;background:rgba(255,255,255,.12);border:0;color:#fff;padding:8px 12px;border-radius:9px;cursor:pointer;font:inherit;font-size:.88rem;font-weight:600;text-align:left}
+.exp-item:hover,.exp-item:focus-visible{background:rgba(255,255,255,.26)}
+.exp-item small{font-weight:400;opacity:.8;font-size:.78rem}
+.exp-empty{margin:0;font-size:.85rem;opacity:.85}
+.exp-more{margin-top:auto;background:#fff;color:var(--forest);border:0;border-radius:999px;padding:8px 16px;font-weight:700;font-size:.83rem;cursor:pointer;align-self:flex-start}
+.exp-more:hover{background:#d8f3dc}
+@media(hover:none){
+  .exp-panel{position:static;opacity:1;transform:none;pointer-events:auto;background:none;color:var(--ink);padding:0 16px 16px;gap:6px}
+  .exp-panel-title{color:var(--forest)}
+  .exp-item{background:#eef4ec;color:var(--forest)}
+  .exp-item small{color:var(--muted);opacity:1}
+  .exp-more{display:none}
+}
