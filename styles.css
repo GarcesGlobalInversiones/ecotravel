@@ -308,3 +308,26 @@ code{background:#eef3ee;padding:1px 6px;border-radius:6px}
   .share-pop{right:auto;left:0}
   .hero-dots{margin-bottom:14px}
 }
+
+/* PÁGINAS LEGALES Y 404 */
+.page-head{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid #e5ece6}
+.page-head .container{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:64px}
+.mini-nav a{color:var(--ink);text-decoration:none;font-weight:600;font-size:.95rem;margin-left:16px}
+.mini-nav a:hover{color:var(--forest-2)}
+.page-main{padding:44px 0 64px}
+.legal h1{font-size:clamp(1.8rem,4vw,2.6rem)}
+.legal h2{font-size:1.25rem;margin-top:1.8em;color:var(--forest)}
+.legal ul{padding-left:20px}
+.legal li{margin-bottom:6px}
+.legal .updated{font-size:.85rem;color:var(--muted)}
+.legal .note{background:#fffbe9;border:1px solid #f2e2a8;border-left:4px solid var(--accent);padding:12px 16px;border-radius:10px;font-size:.92rem}
+.ph{background:#eef3ee;border-radius:5px;padding:1px 7px;font-weight:600;color:var(--forest);white-space:nowrap}
+.page-foot{border-top:1px solid #e5ece6;padding:22px 20px;text-align:center;color:var(--muted);font-size:.85rem}
+.page-foot a{color:var(--forest)}
+.err-page{text-align:center;padding:72px 20px}
+.err-code{font-family:'Fraunces',serif;font-size:clamp(4.5rem,16vw,9rem);color:var(--forest);margin:0;line-height:1}
+.err-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+@media(max-width:720px){
+  .page-head .container{flex-direction:column;gap:8px;padding-top:10px;padding-bottom:10px}
+  .mini-nav a{margin:0 8px}
+}
